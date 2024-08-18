@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "ES6",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "checkJs": true
+  },
+
+  "include": [
+    "types/**/*",
+    "tests/**/*",
+    "index.d.ts"
+  ]
+}
