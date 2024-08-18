@@ -34,7 +34,7 @@ if (shouldMin) {
 
     }).code
 
-    console.log(`Minified in ${Date.now() - startTime}ms(You can disable this by using build-nominify instead of build)`)
+    console.log(`Minified in ${Date.now() - startTime}ms(You can disable this by using build -- --nominify instead of build)`)
 }
 
 
