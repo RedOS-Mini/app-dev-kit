@@ -2,8 +2,41 @@ const express = require("express")
 const fs = require("fs")
 const path = require("path")
 const app = express()
+const ws = require("ws")
+const Websocket = ws.WebSocket
+const WebSocketServer = ws.WebSocketServer
 
 const port = 8567
+
+const server = new WebSocketServer({
+    port: port+1
+})
+
+let lastContents = fs.readFileSync(path.resolve("./app.js"),"utf-8")
+
+function checkForReload() {
+    const next = fs.readFile(path.resolve("./app.js"),"utf-8", (err, data) => {
+        if (err) throw err;
+        if (lastContents !== data) {
+            lastContents = data
+            server.clients.forEach((client) => {
+                client.send("reload")
+                console.log("Refreshed!")
+            })
+        }
+    })
+}
+let interval = setInterval(checkForReload, 1000)
+
+
+server.on("connection", (ws) => {
+    console.log("Client connected to live reload.")
+    ws.on("close", () => {
+        console.warn("Connection closed.")
+        clearInterval(interval)
+    })
+
+})
 
 app.get('/', (req, res) => {
     let startTime = Date.now()

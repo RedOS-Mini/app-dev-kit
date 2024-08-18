@@ -31,6 +31,32 @@ const runtime = new _Rtc()
  */
 
 /**
+ * Clamps a number
+ * @param {Number} a Number to clamp
+ * @param {Number} b Lower boundary to clamp to
+ * @param {Number} c Upper boundary to clamp to
+ * @returns {Number} a, limited between b and c
+ */
+function clamp(a,b,c) {
+    return Math.min(Math.max(a,b),c)
+}
+
+
+/**
+ * Point/rectangle collision
+ * @param {Number} x1 Left edge
+ * @param {Number} y1 Bottom edge
+ * @param {Number} x2 Right edge
+ * @param {Number} y2 Top edge
+ * @param {Number} px Point X
+ * @param {Number} py Point y
+ * @returns {Boolean} Whether the given point is inside the rectangle
+ */
+function pointrect(x1,y1,x2,y2,px,py) {
+    return (Math.min(Math.max(px,x1),x2) === px && Math.min(Math.max(py,y1),y2) === py)
+}
+
+/**
  * Backend class.
  */
 class Backend {
@@ -311,7 +337,9 @@ class Backend {
         ])
 
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
-        ctx.fillRect(((((x1+x2) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2,((((y1+y2)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2, ((((x2-x1) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2,((((y2-y1)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2)
+        const w = ((((x2-x1) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2
+        const h = ((((y2-y1)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2
+        ctx.fillRect((((((x1+x2) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2) - w/2,(((((y1+y2)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2) - h/2, w,h)
     }
     /**
      * Draws an ellipse

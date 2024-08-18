@@ -7,6 +7,15 @@
 <body>
     <canvas id="canv"></canvas>
     <script>
+        const ws = new WebSocket("ws://localhost:8568")
+        ws.addEventListener("message", (data) => {
+            console.log("recieved data")
+            console.log(data.data)
+            if (data.data === "reload") {
+                ws.close(200, "skbidii")
+                window.location.reload()
+            }
+        })
 //app
     </script>
     <style>
