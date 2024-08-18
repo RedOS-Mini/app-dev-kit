@@ -15,18 +15,18 @@ const server = new WebSocketServer({
 let lastContents = fs.readFileSync(path.resolve("./app.js"),"utf-8")
 
 function checkForReload() {
-    const next = fs.readFile(path.resolve("./app.js"),"utf-8", (err, data) => {
-        if (err) throw err;
-        if (lastContents !== data) {
-            lastContents = data
-            server.clients.forEach((client) => {
-                client.send("reload")
-                console.log("Refreshed!")
-            })
-        }
-    })
+    const data = fs.readFileSync(path.resolve("./app.js"),"utf-8")
+
+    if (lastContents !== data) {
+        lastContents = data
+        server.clients.forEach((client) => {
+            client.send("reload")
+            console.log("Refreshed!")
+        })
+    }
+    
 }
-let interval = setInterval(checkForReload, 1000)
+let interval = setInterval(checkForReload, 100)
 
 
 server.on("connection", (ws) => {
