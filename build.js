@@ -1,17 +1,1 @@
-
-const dev_AL = {
-"backend": backend,
-"windowId": windowId
-};
-
-
-
-console.log("Example test app");
-const windowId = dev_AL.windowId;
-const backend = dev_AL.windowId;
-dev_AL.backend.onEvent("tick",() => {
-    dev_AL.backend.clearShapes(dev_AL.windowId);
-
-    dev_AL.backend.drawRect(-100,-100,100,100,5,0,0,255,1,windowId)
-    dev_AL.backend.drawCircle(0,Math.sin(Date.now() / 100) * 50,100,255,0,0,255,dev_AL.windowId);
-},dev_AL.windowId);
+const d={backend:w,windowId:n};console.log("Example test app");const n=d.windowId,w=d.windowId;d.backend.onEvent("tick",(()=>{d.backend.clearShapes(d.windowId),d.backend.drawRect(-100,-100,100,100,5,0,0,255,1,n),d.backend.drawCircle(0,50*Math.sin(Date.now()/100),100,255,0,0,255,d.windowId)}),d.windowId);

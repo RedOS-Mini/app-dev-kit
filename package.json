@@ -6,15 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node ./development/server.js",
-    "build": "node ./development/build.js"
+    "build": "node ./development/build.js",
+    "build-nominify": "node ./development/build.js --nominify"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "derpygamer2142",
+  "license": "MIT",
   "dependencies": {
     "@turbowarp/types": "github:TurboWarp/types-tw#tw",
     "express": "^4.19.2",
     "jsdoc": "^4.0.3",
+    "terser": "^5.31.6",
+    "try-to-catch": "^3.0.1",
     "ws": "^8.18.0"
   }
 }
