@@ -298,7 +298,8 @@ class Backend {
             b,
             a
         ])
-
+        y1 *= -1
+        y2 *= -1
         ctx.lineWidth = ((weight / (runtime.stageWidth/2)) * (canv.width / 2))
         ctx.strokeStyle = `rgba(${r},${g},${b},${a})`
         ctx.beginPath();
@@ -335,11 +336,12 @@ class Backend {
             a,
             radius
         ])
-
+        // y1 *= -1
+        // y2 *= -1
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
         const w = ((((x2-x1) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2
         const h = ((((y2-y1)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2
-        ctx.fillRect((((((x1+x2) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2) - w/2,(((((y1+y2)/2) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2) - h/2, w,h)
+        ctx.fillRect((((((x1+x2) / 2) / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2) - w/2,((((((y1+y2)/-4) / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2) - h/2), w,h)
     }
     /**
      * Draws an ellipse
@@ -371,7 +373,7 @@ class Backend {
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
 
         ctx.beginPath();
-        ctx.ellipse(((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, ((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2, ((r1 / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, ((r2 / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2, 0, 0, 2 * Math.PI);
+        ctx.ellipse(((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, (((y / (runtime.stageHeight/2)) * (canv.height / -2)) + canv.height/2), ((r1 / (runtime.stageWidth/2)) * (canv.width / 2)), ((r2 / (runtime.stageHeight/2)) * (canv.height / 2)), 0, 0, 2 * Math.PI);
         ctx.fill();
     }
 
@@ -413,7 +415,7 @@ class Backend {
         ctx.font = `${bold ? "bold " : ""}${size}px Comic Sans MS`
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx.textAlign = align
-        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, ((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2, ((width / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2)
+        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, -(((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2), ((maxWidth / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2)
     }
     /**
      * Draws an image
@@ -437,7 +439,7 @@ class Backend {
         ])
         const w =  (((width / (runtime.stageWidth/2)) * (canv.width / 2)))
         const h = (((height / (runtime.stageHeight/2)) * (canv.height / 2)))
-        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2 - w/2, ((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2 - h/2,w, h)
+        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2 - w/2, -(((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2 - h/2),w, h)
     }
 
     /**
