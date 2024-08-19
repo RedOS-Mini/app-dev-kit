@@ -308,6 +308,8 @@ class Backend {
         ctx.stroke();
     }
     
+    tolocal(a,b,c) { return (a/b) * c}
+
     /**
      * Draws a rectangle
      * @param {Number} x1 Left side
