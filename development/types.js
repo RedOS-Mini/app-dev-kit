@@ -415,7 +415,7 @@ class Backend {
         ctx.font = `${bold ? "bold " : ""}${size}px Comic Sans MS`
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx.textAlign = align
-        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, -(((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2), ((maxWidth / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2)
+        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, (((-y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2), ((maxWidth / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2)
     }
     /**
      * Draws an image
@@ -439,7 +439,7 @@ class Backend {
         ])
         const w =  (((width / (runtime.stageWidth/2)) * (canv.width / 2)))
         const h = (((height / (runtime.stageHeight/2)) * (canv.height / 2)))
-        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2 - w/2, -(((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2 - h/2),w, h)
+        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2 - w/2, (((-y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2 - h/2),w, h)
     }
 
     /**
