@@ -16,12 +16,12 @@ let lastContents = fs.readFileSync(path.resolve("./app.js"),"utf-8")
 
 function checkForReload() {
     const data = fs.readFileSync(path.resolve("./app.js"),"utf-8")
-
     if (lastContents !== data) {
         lastContents = data
+        console.warn("Refreshed!")
         server.clients.forEach((client) => {
             client.send("reload")
-            console.log("Refreshed!")
+            
         })
     }
     
@@ -34,6 +34,13 @@ server.on("connection", (ws) => {
     ws.on("close", () => {
         console.warn("Connection closed.")
         clearInterval(interval)
+        interval = setInterval(checkForReload,100)
+    })
+    ws.on("error", (data) => {
+        console.error(data.message)
+    })
+    ws.on("message", (data) => {
+        console.log(data)
     })
 
 })

@@ -435,8 +435,9 @@ class Backend {
             height,
             name
         ])
-
-        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, ((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2, ((width / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, ((height / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2)
+        const w =  (((width / (runtime.stageWidth/2)) * (canv.width / 2)))
+        const h = (((height / (runtime.stageHeight/2)) * (canv.height / 2)))
+        ctx.drawImage(this._devEnvImages[name],((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2 - w/2, ((y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2 - h/2,w, h)
     }
 
     /**
@@ -457,8 +458,12 @@ class Backend {
 
         return fetch(url).then((value) => {
             value.blob().then((final) => {
-                this._devEnvImages[name] = new ImageBitmap(final)
-                return 200
+                createImageBitmap(final).then((img) => {
+                    this._devEnvImages[name] = img
+                    console.log(this._devEnvImages[name])
+                    return 200
+                })
+                
             })
         })
     }
