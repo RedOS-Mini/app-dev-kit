@@ -7,18 +7,6 @@ require("@turbowarp/types/types/scratch-vm-extension"); // While you do get typi
 /* @red-init-end */
 
 // While this file may be open source, if you are on a different OS Wars Mini team you can't use this code in your project!
-dev_AL.backend.mkdir("/system/apps/local")
-dev_AL.backend.writeFile("/system/apps/local/test.json", {
-    "name": "aaaitguihrtguihrtgafreaky find ethan simulator 2024 ultimate gold plus",
-    "thumbnail": "https://i.ibb.co/XJkjvpg/find-ethan.jpg",
-    "description": "stick yadssddsour gyatt out for the rizzler 2",
-    "data": {
-        "code": "console.log('yay');",
-        "desktopIcon": "https://i.ibb.co/XJkjvpg/find-ethan.jpg",
-        "name": "f123123auck2222",
-        "id": "shdasdikt22323123"
-    }
-})
 
 console.log("Example test app");
 const winID = dev_AL.windowId;
@@ -29,6 +17,7 @@ async function fetchAPI(url) {
             "ngrok-skip-browser-warning": true
         }
     })
+    console.log("fetched from " + url)
     return await f.json()
 }
 
@@ -45,6 +34,7 @@ async function fetchAPI(url) {
  * @type {Array<AppListing>}
  */
 let list = await fetchAPI("https://thankful-bass-caring.ngrok-free.app/list")
+console.log("got list")
 list = list.list
 //list = list.concat(list).concat(list).concat(list)
 let appButtons = []
@@ -64,8 +54,8 @@ let state = "home"
 let viewApp = {}
 let isInstalled = false
 let accountFlyout = false
-let loginToken = "906c7b5bcfcb35819a803c56098a1026559c674e7622dd2dae0c48e25bffe6f9" // undefined
-let username = "derpygamer2142" // undefined
+let loginToken = undefined
+let username = undefined
 let editingField1 = false
 let field1Content = ""
 let editingField2 = false
@@ -123,6 +113,7 @@ const accountFlyout1 = new dev_AL.backend.Button(-270, -115 + ydown, -320 + 45 +
 }, () => {})
 
 const accountFlyout2 = new dev_AL.backend.Button(-270, -140 + ydown, -320 + 45 + 75, -120 + ydown, 3, 191, 191, 191, 1, winID, dev_AL.backend, () => {
+    console.log('flyout2 click')
     field2Content = ""
     if (!loginToken) {
         // creat account functionality
@@ -141,6 +132,7 @@ const widgetButton = new dev_AL.backend.Button(-100,-50,100,0,3,23, 176, 64,1,wi
 
 
 const fieldEnterButton = new dev_AL.backend.Button(-80,35 - 175,80,80 - 175,3,72, 201, 46,1,winID,dev_AL.backend,() => {
+    console.log("enter click")
     if (state === "create") {
         loading = true
         fetch("https://thankful-bass-caring.ngrok-free.app/newaccount", {
@@ -431,6 +423,7 @@ list.forEach( async (a) => {
         console.log(viewApp)
     }, () => {}))
 })
+console.log("got apps")
 
 async function reset() {
     list = await fetchAPI("https://thankful-bass-caring.ngrok-free.app/list")
@@ -457,10 +450,11 @@ async function reset() {
         }, () => {}))
     })
     
-
+    console.log("reset")
 }
 dev_AL.backend.loadImage("https://i.ibb.co/5RYXSJd/person-150dp-000000-FILL0-wght400-GRAD0-opsz48.png","account",winID)
 dev_AL.backend.loadImage("https://i.ibb.co/h9YJqW5/upload-2-100dp-E8-EAED-FILL0-wght400-GRAD0-opsz48.png","upload",winID)
+console.log("images loaded")
 
 let scrollY = 0
 document.addEventListener("wheel", (e) => {
@@ -474,6 +468,7 @@ document.addEventListener("wheel", (e) => {
 dev_AL.backend.onEvent("tick",async () => {
     dev_AL.backend.clearShapes(dev_AL.windowId
     );
+    console.log("Loop")
 
     if (state !== lastState) {
         tryRefreshData()
@@ -528,10 +523,6 @@ dev_AL.backend.onEvent("tick",async () => {
             accountFlyout2.g = 191*(accountFlyout2.held ? 0.9 : 1)
             accountFlyout2.b = 191*(accountFlyout2.held ? 0.9 : 1)
 
-            /*(if (!loginToken) {
-                accountFlyout0.render()
-                dev_AL.backend.drawText("Your apps",-235,(-115 + -95 - 25)/2,0,0,0,1,20,1,false,"center",100,winID)
-            }*/
             
             accountFlyout1.render()
             dev_AL.backend.drawText(!loginToken ? "Login" : "Account",-235,(-115 + -95 + ydown + ydown)/2,0,0,0,1,20,1,false,"center",100,winID)
@@ -745,22 +736,22 @@ dev_AL.backend.onEvent("tick",async () => {
 
         dev_AL.backend.drawText("File name in /system/apps/local",0,115,0,0,0,1,35,1,false,"center",300,winID)
         dev_AL.backend.drawText("Upload",0,(fieldEnterButton.y1+fieldEnterButton.y2)/2,0,0,0,1,35,1,false,"center",200,winID)
-        /* 
-        note to self:
-        local app file will contain 
-        name(displayed on the desktop, different from the othe name)
-        (the path will contain the app type, will either be in system/apps/widgets or system/apps)
-        code
-        desktop icon
-        an id which will be used in the app's code, but nowhere else
+        
+        // note to self:
+        // local app file will contain 
+        // name(displayed on the desktop, different from the othe name)
+        // (the path will contain the app type, will either be in system/apps/widgets or system/apps)
+        // code
+        // desktop icon
+        // an id which will be used in the app's code, but nowhere else
 
-        full app file will contain all of the above
-        author username
-        thumbnail(only for the app store)
-        description(only for the app store)
-        name(only for the app store)
-        most recent upload time
-        */
+        // full app file will contain all of the above
+        // author username
+        // thumbnail(only for the app store)
+        // description(only for the app store)
+        // name(only for the app store)
+        // most recent upload time
+        
         //dev_AL.backend.drawText("File name in /system/apps/local",0,115,0,0,0,1,35,1,false,"center",300,winID)
 
         if (err) {
@@ -771,7 +762,7 @@ dev_AL.backend.onEvent("tick",async () => {
         }
     }
 
-
+ 
     if (state !== "home") {
         backButton.update()
         backButton.render()// doesn't need color changing because you'll just get redirected
@@ -779,5 +770,4 @@ dev_AL.backend.onEvent("tick",async () => {
     }
 
     lastState = state
-        
 },dev_AL.windowId);
