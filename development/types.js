@@ -466,12 +466,12 @@ class Backend {
     }
 
     /**
-     * Loads an image to be used by drawImage. WARNING: This is asynchronus in the dev environment, but not in the project! 
+     * Loads an image to be used by drawImage, returns a promise that is resolved when the image is loaded.
      * @param {URL} url Url to the image
      * @param {String} name Image name. Outside of the dev environment this adds the image to the pen+ library, but here it adds it to a json file.
      * @param {WindowId} id Window to draw to
-     * @returns {Promise | void} Returns void in red os, returns a promise here! Make sure to convert your code
-     */
+     * @returns {Promise} A promise that will be resolved when the image is loaded.
+    */
     async loadImage(url, name,id) {
         this.windows[id].commands.push(this.windows[id].contents.length)
         this.windows[id].contents = this.windows[id].contents.concat([

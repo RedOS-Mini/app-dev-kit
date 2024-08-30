@@ -1,4 +1,3 @@
-
 /* @red-file-start */
 // Required boilerplate. If you remove or modify this you won't get type definitions and your app may not build correctly!
 require("./development/types");
