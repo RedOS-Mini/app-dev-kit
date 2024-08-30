@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
     startTime = Date.now()
     res.contentType = "text/html"
     res.send(htmlapp)
-    console.log(`Finished constructing testing app in ${Date.now() - startTime}ms`)
+    console.log(`Finished constructing testing app in ${Date.now() - actualStart}ms`)
 })
   
 app.listen(port, () => {

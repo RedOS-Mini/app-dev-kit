@@ -21,7 +21,7 @@ const dev_AL = {
 };
 `
 app = aliases + "\n" + app.slice(0,appStart - 1) + app.slice(appInitEnd+1 + "/* @red-init-end */".length, app.length)
-
+fs.writeFileSync(path.resolve("./build.js"),app)
 console.log(`Edited files in ${Date.now() - startTime}ms`)
 startTime = Date.now()
 
@@ -30,7 +30,16 @@ startTime = Date.now()
 const shouldMin = !process.argv.includes("--nominify")
 if (shouldMin) {
     app = terser.minify_sync(app, {
-        toplevel: true
+        toplevel: true,
+        module: true,
+        // compress: false,
+        // format: {
+        //     semicolons: true,
+        //     beautify: true
+        // }
+        mangle: false,
+        keep_classnames: true,
+        keep_fnames: true
 
     }).code
 

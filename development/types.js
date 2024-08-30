@@ -9,10 +9,7 @@ canv.height = window.innerHeight
 
 let _scratchMouseX = 0
 let _scratchMouseY = 0
-document.addEventListener("mousemove",(e) => {
-    _scratchMouseX = e.clientX
-    _scratchMouseY = e.clientY
-})
+let _isMouseDown = false
 
 class _Rtc {
     constructor() {
@@ -24,6 +21,14 @@ class _Rtc {
 }
 
 const runtime = new _Rtc()
+document.addEventListener("mousemove",(e) => {
+    _scratchMouseX = (e.clientX/canv.width - 0.5) * runtime.stageWidth
+    _scratchMouseY = (e.clientY/canv.height - 0.5) * runtime.stageHeight * -1
+})
+document.addEventListener("mousedown", (e) => {_isMouseDown = true})
+document.addEventListener("mouseup", (e) => {_isMouseDown = false})
+
+
 
 /**
  * A window ID used by the backend
@@ -114,9 +119,14 @@ class Backend {
                 this.a = a
                 this.id = id
 
+                this.mx = 0
+                this.my = 0
+
                 this.backend = backend
 
                 this.triggered = false
+                this.held = false
+                this.hover = false
                 this.onTrigger = onTrigger
                 this.offTrigger = offTrigger
 
@@ -136,21 +146,30 @@ class Backend {
             /**
              * Updates the button's trigger states and events as needed.
              */
-            update(/*mouseX, mouseY, mouseDown*/) {
+            async update(/*mouseX, mouseY, mouseDown*/) {
                 const mouseX =  _scratchMouseX// vm.runtime.ioDevices["mouse"]._scratchX;
                 const mouseY =  _scratchMouseY//vm.runtime.ioDevices["mouse"]._scratchY;
-                const mouseDown = vm.runtime.ioDevices["mouse"]._isDown
-                const t = ((clamp(mouseX, this.toLocal(this.x1, this.backend.windows[this.id].x, this.backend.windows[this.id].width, "stageWidth"), this.toLocal(this.x2, this.backend.windows[this.id].x, this.backend.windows[this.id].width, "stageWidth")) === mouseX) && (clamp(mouseY,this.toLocal(this.y1, this.backend.windows[this.id].y, this.backend.windows[this.id].height, "stageHeight"),this.toLocal(this.y2, this.backend.windows[this.id].y, this.backend.windows[this.id].height, "stageHeight")) === mouseY) && mouseDown && !this.lastMouse && !this.triggered)
+                this.mx = mouseX
+                this.my = mouseY
+                const mouseDown = _isMouseDown//vm.runtime.ioDevices["mouse"]._isDown
+                this.hover = clamp(mouseX, (this.x1/runtime.stageWidth)*this.backend.windows[this.id].width, (this.x2/runtime.stageWidth)*this.backend.windows[this.id].width) === mouseX && (clamp(mouseY,(this.y1/runtime.stageHeight)*this.backend.windows[this.id].height,(this.y2/runtime.stageHeight)*this.backend.windows[this.id].height) === mouseY)
+                const a = this.hover && mouseDown
+                const t = (a && !this.lastMouse && !this.triggered)
                 if (t) {
-                    this.onTrigger(this)
                     this.triggered = true
+                    await this.onTrigger(this)
+                    
                 }
                 else if (!t && this.triggered) {
-                    this.offTrigger(this)
                     this.triggered = false
+                    await this.offTrigger(this)
+                }
+                else if (a) {
+                    this.held = true
                 }
                 else {
                     this.triggered = false
+                    this.held = false
                 }
 
                 this.lastMouse = mouseDown
@@ -313,7 +332,7 @@ class Backend {
     /**
      * Draws a rectangle
      * @param {Number} x1 Left side
-     * @param {Number} y1 Right side
+     * @param {Number} y1 Bottom side
      * @param {Number} x2 Right side
      * @param {Number} y2 Top side
      * @param {Number} radius Rect bezel
@@ -323,7 +342,7 @@ class Backend {
      * @param {Number} a Alpha
      * @param {WindowId} id Window to draw to
      */
-    drawRect(x1, y1, x2, y2, radius, r, g, b, a, id) {
+    drawRect(x2, y1, x1, y2, radius, r, g, b, a, id) {
         this.windows[id].commands.push(this.windows[id].contents.length)
         this.windows[id].contents = this.windows[id].contents.concat([
             "RECT",
@@ -417,7 +436,9 @@ class Backend {
         ctx.font = `${bold ? "bold " : ""}${size}px Comic Sans MS`
         ctx.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx.textAlign = align
-        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, (((-y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2), ((maxWidth / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2)
+        ctx.textBaseline = "middle"
+
+        ctx.fillText(text, ((x / (runtime.stageWidth/2)) * (canv.width / 2)) + canv.width/2, (((-y / (runtime.stageHeight/2)) * (canv.height / 2)) + canv.height/2), ((maxWidth / (runtime.stageWidth/2)) * (canv.width / 2)))
     }
     /**
      * Draws an image
@@ -503,7 +524,7 @@ class Backend {
     /**
      * Reads the file contents from a path
      * @param {String} path Path to the file
-     * @returns {*}
+     * @returns {* | undefined}
      */
     readFile(path) {
         if (path[0] === "/") path = path.slice(1)
@@ -521,7 +542,7 @@ class Backend {
             return section?._content ?? section
         }
         catch {
-            return "Invalid"
+            return undefined
         }
         
     }
@@ -529,7 +550,7 @@ class Backend {
      * Writes to a file, will not create a path but will create the file if it doesn't exist
      * @param {String} path Path to write to
      * @param {*} content Content to write to the file
-     * @returns {"Invalid" | void}
+     * @returns {undefined | void}
      */
     writeFile(path, content) {
         if (path[0] === "/") path = path.slice(1)
@@ -549,7 +570,7 @@ class Backend {
             section[path.split("/")[apath.length]] = this.newFilePoint(path, content)
         }
         catch {
-            return "Invalid"
+            return undefined
         }
     }
     /**
@@ -622,7 +643,7 @@ class Backend {
             return Object.keys(section).filter((i) => !ignoreKeys.includes(i))
         }
         catch {
-            return "Invalid"
+            return undefined
         }
     }
     /**
@@ -738,5 +759,5 @@ setInterval(() => {
 
 /* @red-module-exp */module.exports = /* @red-module-exp-end */{
     backend: _newBcknd,
-    windowId: _newBcknd.newWindow(0,0,320,180)
+    windowId: _newBcknd.newWindow(0,0,640,360)
 }
